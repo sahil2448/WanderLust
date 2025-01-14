@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV != "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -8,9 +12,13 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const listingRouter = require("./routes/listing.js");
+const Listing = require("./models/listing");
+
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const session = require("express-session");
+const MongoStore = require("connect-mongo"); // creates a mongoStore for us
+
 const flash = require("connect-flash");
 const { cookie } = require("express/lib/response.js");
 
@@ -18,16 +26,18 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const dbUrl = process.env.ATLASDB_URL;
 main()
   .then((res) => {
     console.log("Connected to DB");
   })
   .catch((err) => {
-    console.log("err");
+    console.log(err);
   });
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  // await mongoose.connect(MONGO_URL);
+  await mongoose.connect(dbUrl);
 }
 
 app.set("view engine", "ejs");
@@ -37,8 +47,23 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+const store = MongoStore.create({
+  mongoUrl: dbUrl, // ATLAS
+  crypto: {
+    // secret: "mysupersecretcode",
+    secret: process.env.SECRET,
+  },
+  touchAfter: 24 * 3600, // seconds
+});
+
+store.on("error", () => {
+  console.log("ERROR in MONGO SESSION STORE", err);
+});
+
 const sessionOptions = {
-  secret: "mysupersecretcode",
+  store, // ATLAS
+  // secret: "mysupersecretcode",
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -75,39 +100,58 @@ app.use((req, res, next) => {
 // cookie-parser:
 app.use(cookieParser("secretcode"));
 
-app.get("/getsignedcookie", (req, res) => {
-  res.cookie("made-in", "India", { signed: true });
-  res.send("Signed cookie sent");
-});
+// app.get("/getsignedcookie", (req, res) => {
+//   res.cookie("made-in", "India", { signed: true });
+//   res.send("Signed cookie sent");
+// });
 
-app.get("/verify", (req, res) => {
-  console.log(req.signedCookies);
-  console.log(req.cookies); // unsigned cookie
-  res.send("Verified");
-});
+// app.get("/verify", (req, res) => {
+//   console.log(req.signedCookies);
+//   console.log(req.cookies); // unsigned cookie
+//   res.send("Verified");
+// });
 // SENDING A SAMPLE COOKIE:
-app.get("/getCookie", (req, res) => {
-  res.cookie("greet", "namaste");
-  res.cookie("origin", "india");
-  res.send("I have sent you some cookie....check them out");
-});
+// app.get("/getCookie", (req, res) => {
+//   res.cookie("greet", "namaste");
+//   res.cookie("origin", "india");
+//   res.send("I have sent you some cookie....check them out");
+// });
 
-app.get("/", (req, res) => {
-  console.dir(req.cookies);
-  res.send(req.cookies);
-  // res.send("I am a root");
-});
+// app.get("/", (req, res) => {
+//   console.dir(req.cookies);
+//   res.send(req.cookies);
+//   // res.send("I am a root");
+// });
 
 // CREATING A DEMO USER----Authentications:
-app.get("/demoUser", async (req, res) => {
-  let fakeUser = new User({
-    email: "sk@gmail.com",
-    username: "notUser",
-  });
+// app.get("/demoUser", async (req, res) => {
+//   let fakeUser = new User({
+//     email: "sk@gmail.com",
+//     username: "notUser",
+//   });
 
-  let registeredUser = await User.register(fakeUser, "HelloSahil");
-  res.send(registeredUser);
-  // register(user, password, callback) Convenience method to register a new user instance with a given password. Checks if username is unique
+//   let registeredUser = await User.register(fakeUser, "HelloSahil");
+//   res.send(registeredUser);
+//   // register(user, password, callback) Convenience method to register a new user instance with a given password. Checks if username is unique
+// });
+
+app.get("/listings/search", async (req, res) => {
+  let destination = req.query.destination.toLowerCase();
+  let allListings = await Listing.find({});
+
+  let filteredListings = allListings.filter(
+    (list) =>
+      list.location.toLowerCase() === destination ||
+      list.country.toLowerCase() === destination
+  );
+
+  console.log(allListings);
+
+  res.render("listings/index.ejs", {
+    destination,
+    filteredListings,
+    allListings,
+  });
 });
 
 app.use("/listings", listingRouter); // coming from routes folder

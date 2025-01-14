@@ -33,9 +33,13 @@ module.exports.showListing = async (req, res) => {
 
 module.exports.createListing = async (req, res, next) => {
   // let { title, description, image, price, country, location } = req.body;
+  let url = req.file.path;
+  let filename = req.file.filename;
+  console.log(url, "....", filename);
   let newL = new Listing(req.body.listing);
   console.log(req.body.listing);
   newL.owner = req.user._id;
+  newL.image = { url, filename };
   await newL.save();
   req.flash("success", "New listing created");
   res.redirect("/listings");
@@ -51,24 +55,33 @@ module.exports.renderEditForm = async (req, res) => {
     );
     res.redirect("/listings");
   }
-  res.render("listings/edit", { listing });
+  let originalImageUrl = listing.image.url;
+  originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_250");
+  res.render("listings/edit", { listing, originalImageUrl });
 };
 
 module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
-  let update = req.body;
+  // let update = req.body;
 
   // Ensure image is updated properly
-  if (req.body.image && req.body.image.url) {
-    update.image = { url: req.body.image.url }; // Update only the URL part of the image object
+  // if (req.body.image && req.body.image.url) {
+  //   update.image = { url: req.body.image.url }; // Update only the URL part of the image object
+  // }
+
+  // let listing = await Listing.findByIdAndUpdate(id, update, {
+  //   new: true,
+  //   runValidators: true,
+  // });
+  if (typeof req.file !== undefined) {
+    let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    let url = req.file.path;
+    let filename = req.file.filename;
+    listing.image = { url, filename };
+    await listing.save();
   }
 
-  await Listing.findByIdAndUpdate(id, update, {
-    new: true,
-    runValidators: true,
-  });
   req.flash("success", "Listing updated");
-
   res.redirect(`/listings/${id}`);
 };
 
