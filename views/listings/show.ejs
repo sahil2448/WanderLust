@@ -16,8 +16,10 @@
       <p class="card-text">
         &#8377;<%=listing.price.toLocaleString("en-IN") %>
       </p>
+      <!-- new change------------ -->
       <p class="card-text"><%= listing.location %></p>
       <p class="card-text"><%= listing.country %></p>
+      <p class="card-text"><%= listing.list_type %></p>
     </div>
   </div>
   <% if(currUser && listing.owner._id.equals(currUser._id)){ %>
@@ -132,4 +134,3 @@
     </div>
   </div>
 </div>
-

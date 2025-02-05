@@ -27,7 +27,7 @@ module.exports.showListing = async (req, res) => {
     );
     res.redirect("/listings");
   }
-  console.log(listing);
+  // console.log(listing);
   res.render("listings/show.ejs", { listing });
 };
 
@@ -35,12 +35,12 @@ module.exports.createListing = async (req, res, next) => {
   // let { title, description, image, price, country, location } = req.body;
   let url = req.file.path;
   let filename = req.file.filename;
-  console.log(url, "....", filename);
+  // console.log(url, "....", filename);
   let newL = new Listing(req.body.listing);
-  console.log(req.body.listing);
   newL.owner = req.user._id;
   newL.image = { url, filename };
   await newL.save();
+  console.log(newL);
   req.flash("success", "New listing created");
   res.redirect("/listings");
 };
@@ -91,4 +91,26 @@ module.exports.destroyListing = async (req, res) => {
   await Listing.findByIdAndDelete(id);
   req.flash("success", "Listing deleted");
   res.redirect("/listings");
+};
+
+module.exports.filterByType = async (req, res) => {
+  // console.log("this is requestbody", req.query);
+  let category = req.query.category || "";
+  console.log("category: ", category);
+
+  let allListings = await Listing.find({});
+
+  let typeFilteredArray = allListings.filter((list) => {
+    return list.list_type.toLowerCase() === category;
+  });
+
+  // console.log(typeFilteredArray);
+
+  res.render("listings/typeFiltered.ejs", {
+    category,
+    typeFilteredArray,
+  });
+
+  // res.render("listings/typeFiltered.ejs", { category });
+  // res.render("/listings", { category });
 };

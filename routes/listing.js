@@ -35,8 +35,10 @@ const upload = multer({ storage }); // automatically creates upload folder
 // JUST IMPLEMENTING ROUTER.ROUTE...FOR BETTER READABILITY(ITS THE SAME CODE AS IN COMMENTED PART )
 
 // INDEX + CREATE ROUTE
+router.route("/").get(wrapAsync(listingController.index));
+
 router
-  .route("/")
+  .route("/listings")
   .get(wrapAsync(listingController.index))
   .post(
     isLoggedIn,
@@ -45,11 +47,13 @@ router
     wrapAsync(listingController.createListing)
   );
 
-router.get("/new", isLoggedIn, listingController.renderNewForm);
+router.get("/listings/new", isLoggedIn, listingController.renderNewForm);
+
+router.route("/type").get(listingController.filterByType);
 
 // SHOW + UPDATE + DESTROY (ROUTES)
 router
-  .route("/:id")
+  .route("/listings/:id")
   .get(listingController.showListing)
   .put(
     isLoggedIn,
@@ -60,6 +64,11 @@ router
   .delete(isLoggedIn, isOwner, listingController.destroyListing);
 
 // Edit ROUTE
-router.get("/:id/edit", isLoggedIn, isOwner, listingController.renderEditForm);
+router.get(
+  "/listings/:id/edit",
+  isLoggedIn,
+  isOwner,
+  listingController.renderEditForm
+);
 
 module.exports = router;

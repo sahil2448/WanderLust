@@ -134,6 +134,9 @@ app.use(cookieParser("secretcode"));
 //   res.send(registeredUser);
 //   // register(user, password, callback) Convenience method to register a new user instance with a given password. Checks if username is unique
 // });
+// app.get("/", async (req, res) => {
+//   res.render("listings/index.js");
+// });
 
 app.get("/listings/search", async (req, res) => {
   let destination = req.query.destination.toLowerCase();
@@ -154,7 +157,7 @@ app.get("/listings/search", async (req, res) => {
   });
 });
 
-app.use("/listings", listingRouter); // coming from routes folder
+app.use("/", listingRouter); // coming from routes folder
 app.use("/listings/:id/reviews", reviewRouter); // coming from routes folder
 app.use("/", userRouter); // coming from routes folder
 

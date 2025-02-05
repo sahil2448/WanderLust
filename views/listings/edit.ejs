@@ -66,18 +66,44 @@
           <div class="invalid-feedback">Country should be valid</div>
         </div>
       </div>
-      <div class="mb-3">
-        <label for="location" class="form-label">Location</label>
+      <div class="two">
+        <div class="location">
+          <label for="location" class="form-label">Location</label>
 
-        <input
-          type="text"
-          name="location"
-          value="<%= listing.location %>"
-          class="form-control"
-          required
-        />
-        <div class="invalid-feedback">Location should be valid</div>
+          <input
+            type="text"
+            name="location"
+            value="<%= listing.location %>"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Location should be valid</div>
+        </div>
+        <div class="Type">
+          <label for="list_type" class="form-label">Type</label>
+          <select
+            class="form-select mb-3 form-control"
+            aria-label="Large select example"
+            id="list_type"
+            name="listing[list_type]"
+            required
+          >
+            <option selected>Listing Type</option>
+            <option value="Rooms">Rooms</option>
+            <option value="Iconic cities">Iconic cities</option>
+            <option value="Mountaines">Mountaines</option>
+            <option value="Castles">Castles</option>
+            <option value="Amazing pools">Amazing pools</option>
+            <option value="Camping">Camping</option>
+            <option value="Farms">Farms</option>
+            <option value="Arctic">Arctic</option>
+            <option value="Domes">Domes</option>
+            <option value="Boats">Boats</option>
+          </select>
+          <div class="invalid-feedback">Please enter a Type.</div>
+        </div>
       </div>
+
       <button class="btn edit-btn btn-dark mt-3 mb-5">Submit</button>
     </form>
   </div>

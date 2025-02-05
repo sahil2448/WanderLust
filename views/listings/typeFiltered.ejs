@@ -34,11 +34,7 @@
   }
 </style>
 
-<div
-  class="filters"
-  id="filters"
-  style="display: flex; justify-content: space-evenly"
->
+<div class="filters" id="filters" style="display: flex">
   <div style="display: flex">
     <form action="/listings/type" method="get">
       <div class="filter">
@@ -179,31 +175,8 @@
 </div>
 
 <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
-  <% if(typeof destination!="undefined" && destination.length!=0) {%> <% for(let
-  list of filteredListings) {%>
-  <a href="/listings/<%= list._id %>" class="listing-link">
-    <div class="card col card-listing">
-      <img
-        src="<%= list.image.url %>"
-        class="card-img-top"
-        style="height: 20rem"
-        alt="..."
-      />
-      <div class="card-img-overlay"></div>
-      <div class="card-body">
-        <p class="card-text">
-          <b><%= list.title %> </b><br />
-          &#8377;<%= list.price.toLocaleString("en-IN")%>
-          <i class="tax-info"
-            >&nbsp;+ &nbsp;18% GST = &#8377;<%=(list.price + (list.price *
-            0.18)).toLocaleString("en-IN") %>
-          </i>
-        </p>
-      </div>
-    </div></a
-  >
-
-  <% } %> <% } else {%> <% for(let list of allListings) {%>
+  <% if(typeof category!="undefined" && typeFilteredArray.length!=0) {%> <%
+  for(let list of typeFilteredArray) {%>
   <a href="/listings/<%= list._id %>" class="listing-link">
     <div class="card col card-listing">
       <img
