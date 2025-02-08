@@ -29,14 +29,43 @@
     height: 3.25rem;
     padding: 1rem;
     margin-left: 2rem;
+    /* margin: auto; */
     display: flex;
     align-items: center;
   }
-</style>
+  .filter p {
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom 0.5s ease-out;
+  }
 
-<div class="filters" id="filters" style="display: flex">
-  <div style="display: flex">
-    <form action="/listings/type" method="get">
+  .filter p:hover {
+    border-bottom: 2px solid black;
+  }
+  @media (max-width: 400px) {
+    .filter {
+      margin-top: 5px;
+      padding: 0;
+    }
+
+    /* .filters {
+      margin: 0;
+    } */
+  }
+  .tax-toggle {
+    margin: auto;
+  }
+</style>
+<div
+  class="filters"
+  id="filters"
+  style="display: flex; justify-content: space-between"
+>
+  <div
+    class="filters-inner"
+    style="display: flex; justify-content: space-between; flex-wrap: wrap"
+  >
+    <form action="/listings" method="get">
       <div class="filter">
         <button
           style="border: none; background-color: white"
@@ -175,8 +204,8 @@
 </div>
 
 <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
-  <% if(typeof category!="undefined" && typeFilteredArray.length!=0) {%> <%
-  for(let list of typeFilteredArray) {%>
+  <% if(typeof category!="undefined" && typeFilteredArray.length!=0) {%>
+  <%for(let list of typeFilteredArray) {%>
   <a href="/listings/<%= list._id %>" class="listing-link">
     <div class="card col card-listing">
       <img
@@ -199,7 +228,23 @@
     </div></a
   >
 
-  <% } %> <% }%>
+  <% } %> <% } else{%>
+  <div
+    style="
+      display: flex;
+      margin: auto;
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: 700;
+      font-size: 4rem;
+      margin-top: 4rem;
+      color: rgb(182, 42, 7);
+      width: 100%;
+      /* margin-left: 10%; */
+    "
+  >
+    Sorry... Not available right now. Check back later!
+  </div>
+  <% } %>
 </div>
 
 <script>

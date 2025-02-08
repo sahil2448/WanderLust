@@ -49,7 +49,7 @@ router
 
 router.get("/listings/new", isLoggedIn, listingController.renderNewForm);
 
-router.route("/type").get(listingController.filterByType);
+router.route("/listings/type").get(listingController.filterByType);
 
 // SHOW + UPDATE + DESTROY (ROUTES)
 router

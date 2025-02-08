@@ -74,7 +74,12 @@ module.exports.updateListing = async (req, res) => {
   //   runValidators: true,
   // });
   if (typeof req.file !== undefined) {
-    let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    let update = req.body;
+    let listing = await Listing.findByIdAndUpdate(id, update, {
+      new: true,
+      runValidators: true,
+    });
+    console.log(req.body.listing);
     let url = req.file.path;
     let filename = req.file.filename;
     listing.image = { url, filename };

@@ -18,8 +18,30 @@
     border-radius: 20px;
     text-align: center;
   }
+  @media (max-width: 400px) {
+    .container-fluid {
+      background-color: rgb(255, 255, 255);
+      /* opacity: 0.8; */
+      /* margin-top: 4rem; */
+    }
+    .navbar-nav {
+      margin-top: 1rem;
+    }
+    .nav-link {
+      margin-top: 1rem;
+    }
+    .collapse {
+      height: 100vh;
+    }
+    .filters {
+      margin-bottom: 1rem;
+    }
+  }
 </style>
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+<nav
+  class="navbar navbar-expand-md bg-body-light border-bottom sticky-top"
+  id="nav"
+>
   <div class="container-fluid">
     <a class="navbar-brand" href="/listings"
       ><i class="fa-regular fa-compass"></i
@@ -58,7 +80,7 @@
         </form>
       </div>
       <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="/listings/new">Airbnb your home</a>
+        <a class="nav-link" href="/listings/new">Host Your Place</a>
 
         <% if(!currUser){ %>
         <a class="nav-link" href="/signup"> <b>Sign up</b></a>

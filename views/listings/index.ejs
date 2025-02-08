@@ -29,18 +29,44 @@
     height: 3.25rem;
     padding: 1rem;
     margin-left: 2rem;
+    /* margin: auto; */
     display: flex;
     align-items: center;
+  }
+  .filter p {
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom 0.5s ease-out;
+  }
+
+  .filter p:hover {
+    border-bottom: 2px solid black;
+  }
+  @media (max-width: 400px) {
+    .filter {
+      margin-top: 5px;
+      padding: 0;
+    }
+
+    /* .filters {
+      margin: 0;
+    } */
+  }
+  .tax-toggle {
+    margin: auto;
   }
 </style>
 
 <div
   class="filters"
   id="filters"
-  style="display: flex; justify-content: space-evenly"
+  style="display: flex; justify-content: space-between"
 >
-  <div style="display: flex">
-    <form action="/listings/type" method="get">
+  <div
+    class="filters-inner"
+    style="display: flex; justify-content: space-between; flex-wrap: wrap"
+  >
+    <form action="/listings" method="get">
       <div class="filter">
         <button
           style="border: none; background-color: white"
